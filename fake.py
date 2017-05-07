@@ -1,12 +1,10 @@
-import shutil
-import zipfile
+import utils
+import os
 
 lawyer = "Lawyer"
 doctor = "Doctor"
 female = "Female"
 male = "Male"
-
-
 
 
 
@@ -20,33 +18,33 @@ class Profile(object):
 
     def get_files(self):
         # for now get files from local folder
-        zip1 = ""
-        zip2 = ""
+        f1 = ""
+        f2 = ""
         if self.job == lawyer:
-            shutil.copyfile("/Users/mariamessick/Desktop/MIT/SC_Cases.zip", self.out_folder+"SC_Cases.zip")
-            zip1 = self.out_folder+"SC_Cases.zip"
+            # request lawyer files
+            f1 = server.request()
         else:
-            shutil.copyfile("/Users/mariamessick/Desktop/MIT/Forms.zip", self.out_folder+"Forms.zip")
-            zip1 = self.out_folder+"Forms.zip"
+            # request doctor files
+            f1 = server.request()
         if self.sex == female:
-            shutil.copyfile("/Users/mariamessick/Desktop/MIT/FamilyVacation.zip", 
-                            self.out_folder + self.last + "_Vacation.zip")
-            zip2 = self.out_folder + self.last + "_Vacation.zip"
+            # request vacation files
+            f2 = server.request()
         else:
-            shutil.copyfile("/Users/mariamessick/Desktop/MIT/PuppyPics.zip", 
-                            self.out_folder+"PuppyPics.zip")
-            zip2 = self.out_folder+"PuppyPics.zip"
+            # request puppy files
+            f2 = server.request()
+        self.f1 = f1
+        self.f2 = f2
 
-        zip_ref1 = zipfile.ZipFile(zip1, 'r')
-        zip_ref1.extractall(self.out_folder)
-        zip_ref1.close()
 
-        zip_ref2 = zipfile.ZipFile(zip2, 'r')
-        zip_ref2.extractall(self.out_folder)
-        zip_ref2.close()
+    def extract_files(self):
+        utils.unzip(self.f1, self.out_folder)
+        utils.unzip(self.f2, self.out_folder)
 
-    def extract_files(self, out_folder):
+
+
 
 # example
 me = Profile("Maria", "Messick", "Lawyer", "Female", "/Users/mariamessick/Desktop/")
 me.get_files()
+me.extract_files()
+
