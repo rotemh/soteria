@@ -7,6 +7,9 @@ female = "Female"
 male = "Male"
 
 
+
+
+
 class Profile(object):
     def __init__(self, first, last, job, sex, out_folder):
         self.first = first
@@ -20,10 +23,10 @@ class Profile(object):
         zip1 = ""
         zip2 = ""
         if self.job == lawyer:
-            shutil.copyfile("/Users/mariamessick/Desktop/MIT/Work1.zip", self.out_folder+"SC_Cases.zip")
+            shutil.copyfile("/Users/mariamessick/Desktop/MIT/SC_Cases.zip", self.out_folder+"SC_Cases.zip")
             zip1 = self.out_folder+"SC_Cases.zip"
         else:
-            shutil.copyfile("/Users/mariamessick/Desktop/MIT/", self.out_folder+"Forms.zip")
+            shutil.copyfile("/Users/mariamessick/Desktop/MIT/Forms.zip", self.out_folder+"Forms.zip")
             zip1 = self.out_folder+"Forms.zip"
         if self.sex == female:
             shutil.copyfile("/Users/mariamessick/Desktop/MIT/FamilyVacation.zip", 
@@ -42,15 +45,7 @@ class Profile(object):
         zip_ref2.extractall(self.out_folder)
         zip_ref2.close()
 
-    def set_job(self, job):
-        self.job = job
-
-    def set_sex(self, sex):
-        self.sex = sex
-
-    def set_folder(self, folder):
-        self.out_folder = folder
-
+    def extract_files(self, out_folder):
 
 # example
 me = Profile("Maria", "Messick", "Lawyer", "Female", "/Users/mariamessick/Desktop/")
