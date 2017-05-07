@@ -86,6 +86,15 @@ def post_request(url, payload):
     """
     req = requests.post(url, data=payload)
 
+def get_request(url):
+    """
+    Gets a url and creates and submits a GET request
+    :param url: string
+    :return: bytearray
+    """
+    req = requests.get(url)
+    return req
+
 if __name__ == '__main__':
     # x = zip_dir('/Users/rotemhemo/Desktop/time_capsule')
     #post_request("http://127.0.0.1", {'_file': x, 'salt':"lksdhbglkdfhgb"})
