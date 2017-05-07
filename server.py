@@ -1,9 +1,7 @@
 from flask import Flask
 from flask import request
-import flask
 import hashlib
 import json
-import gzip
 app = Flask(__name__)
 
 stored_files = {}
