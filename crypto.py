@@ -7,7 +7,13 @@ from struct import pack
 
 from os import urandom
 
+
 class PRNG(object):
+    '''
+    This PNRG was adopted from
+    http://stackoverflow.com/questions/18264314/generating-a-public-private-key-pair-using-an-initial-key
+    '''
+
     def __init__(self, seed):
         self.index = 0
         self.seed = seed
@@ -22,7 +28,7 @@ class PRNG(object):
         return result
 
 
-def key_gen(passphrase=None, _salt = None):
+def key_gen(passphrase=None, _salt=None):
     """
     Gets a paraphrase and generate a public/private key pair accordingly.
     -- WARNING - The key is 1-1 to the passphrase
@@ -31,9 +37,10 @@ def key_gen(passphrase=None, _salt = None):
     """
     if passphrase is not None:
         seed, salt = key_derivation(passphrase, _salt)
-        return RSA.generate(2048, randfunc=PRNG(seed)) , salt
+        return RSA.generate(2048, randfunc=PRNG(seed)), salt
 
     return RSA.generate(2048)
+
 
 def encrypt(data, public_key):
     """
@@ -59,6 +66,7 @@ def encrypt(data, public_key):
 
     return out
 
+
 def decrypt(encrypted_data, private_key):
     """
     Given encrypted data and private key, it decrypts the data
@@ -68,8 +76,10 @@ def decrypt(encrypted_data, private_key):
     """
 
     enc_session_key, nonce, tag, ciphertext = encrypted_data[:private_key.size_in_bytes()], \
-                                              encrypted_data[private_key.size_in_bytes():private_key.size_in_bytes() + 16], \
-                                              encrypted_data[private_key.size_in_bytes() + 16:private_key.size_in_bytes() + 32], \
+                                              encrypted_data[
+                                              private_key.size_in_bytes():private_key.size_in_bytes() + 16], \
+                                              encrypted_data[
+                                              private_key.size_in_bytes() + 16:private_key.size_in_bytes() + 32], \
                                               encrypted_data[
                                               private_key.size_in_bytes() + 32:]
     cipher_rsa = PKCS1_OAEP.new(private_key)
@@ -79,7 +89,7 @@ def decrypt(encrypted_data, private_key):
     return cipher_aes.decrypt_and_verify(bytes(ciphertext), bytes(tag))
 
 
-def key_derivation(passphrase, salt = None):
+def key_derivation(passphrase, salt=None):
     """
     Gets a paraphrase and returns a pure random key in return
     :param paraphrase:
@@ -88,6 +98,7 @@ def key_derivation(passphrase, salt = None):
     if salt is None:
         salt = urandom(16)
     return PBKDF2(passphrase, salt, dkLen=32, count=1000, prf=None), salt
+
 
 if __name__ == "__main__":
     msg = b"Hello"
@@ -107,4 +118,5 @@ if __name__ == "__main__":
     assert random_bytes == decrypt(encrypt(random_bytes, key), key), "Same text Encrytpion failed"
     assert random_bytes != decrypt(encrypt(bytes(urandom(10000)), key), key), "diff text encrytpion failed"
 
-    print "All tests passed"
+    print
+    "All tests passed"

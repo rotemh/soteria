@@ -1,0 +1,92 @@
+import os
+from io import BytesIO
+import zipfile
+import requests
+
+
+class InMemoryZip(object):
+    """
+    Adopted from -
+    http://stackoverflow.com/questions/2463770/python-in-memory-zip-library
+    """
+    def __init__(self):
+        # Create the in-memory file-like object
+        self.in_memory_zip = BytesIO()
+
+    def append(self, filename_in_zip, file_contents):
+        '''Appends a file with name filename_in_zip and contents of
+        file_contents to the in-memory zip.'''
+        # Get a handle to the in-memory zip in append mode
+        zf = zipfile.ZipFile(self.in_memory_zip, "a", zipfile.ZIP_DEFLATED, False)
+
+        # Write the file to the in-memory zip
+        zf.writestr(filename_in_zip, file_contents)
+
+        # Mark the files as having been created on Windows so that
+        # Unix permissions are not inferred as 0000
+        for zfile in zf.filelist:
+            zfile.create_system = 0
+
+        return self
+
+    def read(self):
+        '''Returns a byte array with the contents of the in-memory zip.'''
+        self.in_memory_zip.seek(0)
+        return self.in_memory_zip.read()
+
+    def writetofile(self, filename):
+        '''Writes the in-memory zip to a file.'''
+        f = file(filename, "w")
+        f.write(self.read())
+        f.close()
+
+
+
+def zip_dir(dir_path):
+    """
+    Gets a dir path and returns a bytearray with the directory's zipped content
+    :param dir_path:
+    :return:
+    """
+    imz = InMemoryZip()
+
+    for root, dirs, files in os.walk(dir_path):
+        for file in files:
+            with open(os.path.join(root, file), 'rb') as f:
+                imz.append(file, f.read())
+
+    return imz.read()
+
+
+def unzip(data, dir_path):
+    """
+    Gets a a zipped file byte array and uncompress the data into a the dir_path
+    :param data:
+    :return:
+    """
+
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
+
+    with open(dir_path + '/content.zip', "wb") as f:
+        f.write(data)
+
+    zip_ref = zipfile.ZipFile(dir_path + '/content.zip', 'r')
+    zip_ref.extractall(dir_path)
+    zip_ref.close()
+    os.remove(dir_path + '/content.zip')
+
+
+def post_request(url, payload):
+    """
+    Gets a url and  arguments (key, value) and creates and submits a POST request
+    :param url: string
+    :param payload: python dict
+    :return:
+    """
+    req = requests.post(url, data=payload)
+
+if __name__ == '__main__':
+    # x = zip_dir('/Users/rotemhemo/Desktop/time_capsule')
+    #post_request("http://127.0.0.1", {'_file': x, 'salt':"lksdhbglkdfhgb"})
+    # unzip(x, '/Users/rotemhemo/Desktop/time_capsule/test')
