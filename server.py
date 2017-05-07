@@ -25,9 +25,9 @@ def get_dummy_files(type):
 
 
 @app.route('/<int:id>', methods=['GET'])
-def get_file(id):
-    if id in stored_files:
-        return stored_files[id]
+def get_file(f_id):
+    if f_id in stored_files:
+        return stored_files[f_id]
     else:
         return "No such file\n"
 
@@ -35,11 +35,11 @@ def get_file(id):
 @app.route('/', methods=['POST'])
 def upload_file():
     data = json.loads(request.data)
-    uploaded_file = data['uploaded_file']
+    uploaded_file = data['_file']
     salt = data['salt']
     id = hashlib.sha256(uploaded_file.encode()).hexdigest()
     stored_files[id] = (uploaded_file, salt)
-    return "File stored\n"
+    return id
 
 
 if __name__ == "__main__":

@@ -2,7 +2,8 @@ import os
 from io import BytesIO
 import zipfile
 import requests
-
+import base64
+import json
 
 class InMemoryZip(object):
     """
@@ -82,9 +83,20 @@ def post_request(url, payload):
     Gets a url and  arguments (key, value) and creates and submits a POST request
     :param url: string
     :param payload: python dict
+    :return: post request object
+    """
+    return requests.post(url, data=payload)
+
+def post_encrypted_file(url, enc_data, salt):
+    """
+    Post the encrypted data to the server
+    :param url:
+    :param enc_data:
+    :param salt:
     :return:
     """
-    req = requests.post(url, data=payload)
+    b64 = lambda x: base64.b64encode(bytes(x))
+    return post_request(url, json.dumps({'_file': b64(enc_data), 'salt':b64(salt)})).text
 
 def get_request(url):
     """
@@ -96,8 +108,8 @@ def get_request(url):
     return req
 
 if __name__ == '__main__':
-    # x = zip_dir('/Users/rotemhemo/Desktop/time_capsule')
-    #post_request("http://127.0.0.1", {'_file': x, 'salt':"lksdhbglkdfhgb"})
+    x = zip_dir('/Users/rotemhemo/Desktop/time_capsule')
+    print post_encrypted_file("http://127.0.0.1:5000", x, "lksdhbglkdfhgb")
     # unzip(x, '/Users/rotemhemo/Desktop/time_capsule/test')
     pass
 
