@@ -53,7 +53,7 @@ def zip_dir(dir_path):
     for root, dirs, files in os.walk(dir_path):
         for file in files:
             with open(os.path.join(root, file), 'rb') as f:
-                imz.append(file, f.read())
+                imz.append(os.path.join(root, file), f.read())
 
     return imz.read()
 
