@@ -90,3 +90,4 @@ if __name__ == '__main__':
     # x = zip_dir('/Users/rotemhemo/Desktop/time_capsule')
     #post_request("http://127.0.0.1", {'_file': x, 'salt':"lksdhbglkdfhgb"})
     # unzip(x, '/Users/rotemhemo/Desktop/time_capsule/test')
+    pass
