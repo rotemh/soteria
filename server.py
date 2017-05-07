@@ -25,7 +25,7 @@ def upload_file():
     data = json.loads(request.data)
     uploaded_file = data['uploaded_file']
     salt = data['salt']
-    id = hashlib.md5(uploaded_file.encode()).hexdigest()
+    id = hashlib.sha256(uploaded_file.encode()).hexdigest()
     stored_files[id] = (uploaded_file, salt)
     return "File stored\n"
 
