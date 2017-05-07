@@ -9,7 +9,6 @@ stored_files = {}
 
 @app.route('/', methods=['GET'])
 def get_dummy_files():
-    print stored_files
     return "Returned dummy files\n"
 
 
