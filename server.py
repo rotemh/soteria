@@ -1,15 +1,28 @@
 from flask import Flask
 from flask import request
+import flask
 import hashlib
 import json
+import gzip
 app = Flask(__name__)
 
 stored_files = {}
 
 
-@app.route('/', methods=['GET'])
-def get_dummy_files():
-    return "Returned dummy files\n"
+@app.route('/profile/<type>', methods=['GET'])
+def get_dummy_files(type):
+    if type == 'lawyer':
+        pass
+    elif type == 'doctor:':
+        pass
+    elif type == 'female':
+        pass
+    elif type == 'male':
+        pass
+    else:
+        return "No files here\n"
+
+    return "Sent files\n"
 
 
 @app.route('/<int:id>', methods=['GET'])
