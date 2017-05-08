@@ -5,6 +5,8 @@ import requests
 import base64
 import json
 
+SERVER_ADDRESS = 'http://127.0.0.1:5000/'
+
 class InMemoryZip(object):
     """
     Adopted from -
@@ -97,6 +99,17 @@ def post_encrypted_file(url, enc_data, salt):
     """
     b64 = lambda x: base64.b64encode(bytes(x))
     return post_request(url, json.dumps({'_file': b64(enc_data), 'salt':b64(salt)})).text
+
+def get_encrypted_file(hash_id):
+    """
+    Given HashID, returns a tuple of <bytes, salt>
+    :param id:
+    :return:
+    """
+
+    b64 = lambda x: base64.b64decode(x)
+    ans = get_request(SERVER_ADDRESS + hash_id).split(',')
+    return b64(ans[0]), b64(ans[1])
 
 def get_request(url):
     """
