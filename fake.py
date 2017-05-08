@@ -1,11 +1,9 @@
 import utils
-import os
 
 lawyer = "Lawyer"
 doctor = "Doctor"
 female = "Female"
 male = "Male"
-
 
 
 class Profile(object):
@@ -22,19 +20,18 @@ class Profile(object):
         f2 = ""
         if self.job == lawyer:
             # request lawyer files
-            f1 = server.request()
+            f1 = utils.get_request("url")
         else:
             # request doctor files
-            f1 = server.request()
+            f1 = utils.get_request("url")
         if self.sex == female:
             # request vacation files
-            f2 = server.request()
+            f2 = utils.get_request("url")
         else:
             # request puppy files
-            f2 = server.request()
+            f2 = utils.get_request("url")
         self.f1 = f1
         self.f2 = f2
-
 
     def extract_files(self):
         utils.unzip(self.f1, self.out_folder)
