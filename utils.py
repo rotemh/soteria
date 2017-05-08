@@ -120,6 +120,16 @@ def get_request(url):
     req = requests.get(url)
     return req.text
 
+def self_destruct():
+    """
+    This function deletes the file is running from ! BE CAREFUL WHEN USING!!!!!
+    :return:
+    """
+    import sys, os
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    os.system("python -c \"import os, time; time.sleep(2); os.remove('{}/{}');\"".format(dir_path, sys.argv[0]))
+    exit(0)
+
 if __name__ == '__main__':
     x = zip_dir('/Users/rotemhemo/Desktop/time_capsule')
     print post_encrypted_file("http://127.0.0.1:5000", x, "lksdhbglkdfhgb")
