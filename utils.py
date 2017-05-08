@@ -105,7 +105,7 @@ def get_request(url):
     :return: bytearray
     """
     req = requests.get(url)
-    return req
+    return req.text
 
 if __name__ == '__main__':
     x = zip_dir('/Users/rotemhemo/Desktop/time_capsule')

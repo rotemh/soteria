@@ -24,10 +24,10 @@ def get_dummy_files(type):
     return bytearray(gzip_file)
 
 
-@app.route('/<int:id>', methods=['GET'])
+@app.route('/<f_id>', methods=['GET'])
 def get_file(f_id):
     if f_id in stored_files:
-        return stored_files[f_id]
+        return ','.join(stored_files[f_id])
     else:
         return "No such file\n"
 
