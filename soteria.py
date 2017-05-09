@@ -12,6 +12,7 @@ def main():
     encr = args[1]
     job = args[2]
     sex = args[3]
+    out_folder = args[4]
 
 
     if encr == "-e":

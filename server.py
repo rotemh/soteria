@@ -10,7 +10,7 @@ stored_files = {}
 
 @app.route('/profile/<type>', methods=['GET'])
 def get_dummy_files(type):
-    print type
+    print(type)
     if type == 'lawyer':
         zip_address = 'zipfiles/SC_Cases.zip'
     elif type == 'doctor':
