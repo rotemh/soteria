@@ -8,9 +8,7 @@ male = "Male"
 
 
 class Profile(object):
-    def __init__(self, first, last, job, sex, out_folder):
-        self.first = first
-        self.last = last
+    def __init__(self, job, sex, out_folder):
         self.job = job
         self.sex = sex
         self.out_folder = out_folder
@@ -44,7 +42,7 @@ class Profile(object):
 
 
 # example
-me = Profile("Maria", "Messick", "Doctor", "Female", "/Users/rotemhemo/Desktop/time_capsule")
+me = Profile("Doctor", "Female", "/Users/rotemhemo/Desktop/time_capsule")
 me.get_files()
 print(me.f1)
 me.extract_files()
