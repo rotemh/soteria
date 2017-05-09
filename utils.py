@@ -44,8 +44,6 @@ class InMemoryZip(object):
         f.write(self.read())
         f.close()
 
-
-
 def zip_dir(dir_path):
     """
     Gets a dir path and returns a bytearray with the directory's zipped content
@@ -57,9 +55,20 @@ def zip_dir(dir_path):
     for root, dirs, files in os.walk(dir_path):
         for file in files:
             with open(os.path.join(root, file), 'rb') as f:
-                imz.append(os.path.join(root, file), f.read())
+                imz.append(file, f.read())
 
     return imz.read()
+
+
+def clean_folder(folder_path):
+    """
+    Gets a path and deltes all the files in it
+    :param folder_path:
+    :return:
+    """
+    for root, dirs, files in os.walk(folder_path):
+        for file in files:
+            os.remove(os.path.join(root, file))
 
 
 def unzip(data, dir_path):

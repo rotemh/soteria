@@ -24,20 +24,20 @@ class Profile(object):
         else:
             # request doctor files
             self.f1 = utils.get_request(utils.SERVER_ADDRESS + "profile/doctor")
-        # if self.sex == female:
-        #     # request vacation files
-        #     # self.f2 = utils.get_request(utils.SERVER_ADDRESS + "profile/female")
-        # else:
-        #     # request puppy files
-        #     self.f2 = utils.get_request(utils.SERVER_ADDRESS + "profile/male")
+        if self.sex == female:
+            # request vacation files
+            self.f2 = utils.get_request(utils.SERVER_ADDRESS + "profile/female")
+        else:
+            # request puppy files
+            self.f2 = utils.get_request(utils.SERVER_ADDRESS + "profile/male")
 
         b64 = lambda x: base64.b64decode(x)
         self.f1 = b64(self.f1)
-        # self.f2 = b64(self.f2)
+        self.f2 = b64(self.f2)
 
     def extract_files(self):
         utils.unzip(self.f1, self.out_folder)
-        # utils.unzip(self.f2, self.out_folder)
+        utils.unzip(self.f2, self.out_folder)
 
 
 
