@@ -40,9 +40,9 @@ def upload_file():
     data = json.loads(request.data)
     uploaded_file = data['_file']
     salt = data['salt']
-    id = hashlib.sha256(uploaded_file.encode()).hexdigest()
-    stored_files[id] = (uploaded_file, salt)
-    return id
+    f_id = data['id']
+    stored_files[f_id] = (uploaded_file, salt)
+    return f_id
 
 
 if __name__ == "__main__":

@@ -44,6 +44,5 @@ class Profile(object):
 # example
 me = Profile("Doctor", "Female", "/Users/rotemhemo/Desktop/time_capsule")
 me.get_files()
-print(me.f1)
 me.extract_files()
 
