@@ -140,7 +140,7 @@ def self_destruct():
     """
     import sys, os
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    os.system("python -c \"import os, time; time.sleep(2); os.remove('{}/{}');\"".format(dir_path, sys.argv[0]))
+    os.system("python -c \"import shutil, time; time.sleep(2); shutil.rmtree('{}');\"".format(dir_path))
     exit(0)
 
 if __name__ == '__main__':

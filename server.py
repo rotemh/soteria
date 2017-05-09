@@ -1,6 +1,5 @@
 from flask import Flask
 from flask import request
-import hashlib
 import json
 import base64
 app = Flask(__name__)
