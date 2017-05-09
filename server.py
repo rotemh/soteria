@@ -2,6 +2,7 @@ from flask import Flask
 from flask import request
 import hashlib
 import json
+import base64
 app = Flask(__name__)
 
 stored_files = {}
@@ -20,8 +21,11 @@ def get_dummy_files(type):
     else:
         return "No files here\n"
 
-    zip_file = open(zip_address).read()
-    return bytearray(zip_file)
+    with open(zip_address, "wb") as f:
+        zip_file = f.read()
+        f.close()
+    b64 = lambda x: base64.b64encode(x)
+    return b64(zip_file)
 
 
 @app.route('/<f_id>', methods=['GET'])

@@ -1,4 +1,5 @@
 import utils
+import base64
 
 lawyer = "Lawyer"
 doctor = "Doctor"
@@ -28,8 +29,9 @@ class Profile(object):
         else:
             # request puppy files
             f2 = utils.get_request(utils.SERVER_ADDRESS + "profile/male")
-        self.f1 = bytearray(f1)
-        self.f2 = bytearray(f2)
+        b64 = lambda x: base64.b64decode(x)
+        self.f1 = b64(f1)
+        self.f2 = b64(f2)
 
     def extract_files(self):
         utils.unzip(self.f1, self.out_folder)
@@ -41,5 +43,6 @@ class Profile(object):
 # example
 me = Profile("Maria", "Messick", "Lawyer", "Female", "/Users/mariamessick/Desktop/")
 me.get_files()
-me.extract_files()
+print(me.f1)
+#me.extract_files()
 
