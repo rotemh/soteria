@@ -10,18 +10,18 @@ stored_files = {}
 @app.route('/profile/<type>', methods=['GET'])
 def get_dummy_files(type):
     if type == 'lawyer':
-        gzip_address = './zipfiles/doc.tar.gz'
+        zip_address = './zipfiles/SC_Cases.zip'
     elif type == 'doctor:':
-        gzip_address = './zipfiles/doc.tar.gz'
+        zip_address = './zipfiles/Forms.zip'
     elif type == 'female':
-        gzip_address = './zipfiles/doc.tar.gz'
+        zip_address = './zipfiles/FamilyVacation.zip'
     elif type == 'male':
-        gzip_address = './zipfiles/doc.tar.gz'
+        zip_address = './zipfiles/PuppyPics.zip'
     else:
         return "No files here\n"
 
-    gzip_file = open(gzip_address).read()
-    return bytearray(gzip_file)
+    zip_file = open(zip_address).read()
+    return bytearray(zip_file)
 
 
 @app.route('/<f_id>', methods=['GET'])

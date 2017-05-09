@@ -67,7 +67,6 @@ def unzip(data, dir_path):
     :param data:
     :return:
     """
-
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
 
@@ -132,7 +131,7 @@ def self_destruct():
 
 if __name__ == '__main__':
     x = zip_dir('/Users/rotemhemo/Desktop/time_capsule')
-    print post_encrypted_file("http://127.0.0.1:5000", x, "lksdhbglkdfhgb")
+    print(post_encrypted_file("http://127.0.0.1:5000", x, "lksdhbglkdfhgb"))
     # unzip(x, '/Users/rotemhemo/Desktop/time_capsule/test')
     pass
 

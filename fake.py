@@ -15,23 +15,21 @@ class Profile(object):
         self.out_folder = out_folder
 
     def get_files(self):
-        # for now get files from local folder
-        f1 = ""
-        f2 = ""
+        # get files from the server
         if self.job == lawyer:
             # request lawyer files
-            f1 = utils.get_request("url")
+            f1 = utils.get_request(utils.SERVER_ADDRESS + "profile/lawyer")
         else:
             # request doctor files
-            f1 = utils.get_request("url")
+            f1 = utils.get_request(utils.SERVER_ADDRESS + "profile/doctor")
         if self.sex == female:
             # request vacation files
-            f2 = utils.get_request("url")
+            f2 = utils.get_request(utils.SERVER_ADDRESS + "profile/female")
         else:
             # request puppy files
-            f2 = utils.get_request("url")
-        self.f1 = f1
-        self.f2 = f2
+            f2 = utils.get_request(utils.SERVER_ADDRESS + "profile/male")
+        self.f1 = bytearray(f1)
+        self.f2 = bytearray(f2)
 
     def extract_files(self):
         utils.unzip(self.f1, self.out_folder)
