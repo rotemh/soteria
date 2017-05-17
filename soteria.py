@@ -6,7 +6,7 @@ import argparse
 import time
 import sys
 
-FOLDER = '/Users/rotemhemo/Desktop/demo'
+FOLDER = '~/Desktop/demo'
 
 verbose = True
 def print_ascii():

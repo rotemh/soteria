@@ -42,7 +42,7 @@ class Profile(object):
 
 
 # example
-me = Profile("Doctor", "Female", "/Users/rotemhemo/Desktop/time_capsule")
+me = Profile("Doctor", "Female", "~/Desktop/time_capsule")
 me.get_files()
 me.extract_files()
 
