@@ -28,7 +28,6 @@ Pillow==3.3.0
 psycopg2==2.6.1
 py2app==0.7.3
 PyAudio==0.2.8
-PyAutoGUI==0.9.33
 pycrypto==2.6.1
 PyMsgBox==1.0.3
 pyOpenSSL==0.13.1
