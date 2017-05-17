@@ -1,32 +1,92 @@
 import crypto
 import utils
 import fake
+import hashlib
+import argparse
+import time
+import sys
+
+FOLDER = '~/Desktop/demo'
+
+verbose = True
+def print_ascii():
+    with open("asciiart", "r") as f:
+        for line in f.readlines():
+            print line,
+    print " "
 
 def main():
 
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-enc', help='Encrypt the file ', action="store_true")
+    parser.add_argument('-dec', help='Decrypt the file ', action="store_true")
 
-    encr = raw_input("Are you encrypting or decrypting files? \n\
-     				Enter \'e\' for encrypt or \'d\' for decrypt: ")
-    if encr == "e":
-        key, salt = crypto.key_gen("123456")
-        x = utils.zip_dir('/Users/rotemhemo/Desktop/time_capsule')
-        r = utils.post_encrypted_file(utils.SERVER_ADDRESS, crypto.encrypt(x, key), salt)
-        print("Your id is - ", r)
-        print("The following set of questions will help us determine fake files to download to your computer.")
-        first = raw_input("Please type your first name: ")
-        last = raw_input("Please type your last name: ")
-        sex = raw_input("Please type your sex: ")
-        job = raw_input("Please type your profession: ")
-        out_folder = raw_input("Please enter the folder path for where you want the fake files to go: ")
-        print("Thank you. Your files will download shortly.")
-        prof = fake.Profile(first, last, job, sex, out_folder)
+    parser.add_argument('-p', help='User\'s profession', type = str)
+    parser.add_argument('-s', help='User\'s sex', type = str)
+
+
+    args = parser.parse_args()
+    print_ascii()
+    if args.enc:
+        if not args.p or not args.s:
+            print "Please specify your profession and sex"
+            exit()
+        if verbose:
+            print "Generating keys..."
+        key, passphrase, salt = crypto.key_gen()
+
+        print "Your passphrase is (Don't lose it!!!) - \n %s"%(passphrase)
+
+        if verbose:
+            print "Encrypting your files..."
+        x = utils.zip_dir(FOLDER)
+        if verbose:
+            print "Uploading your files to the server..."
+        time.sleep(1)
+        r = utils.post_encrypted_file(utils.SERVER_ADDRESS, crypto.encrypt(x, key), ''.join(passphrase[:2]), salt)
+        if verbose:
+            print "Deleting your files..."
+        utils.clean_folder(FOLDER)
+
+        if verbose:
+            print "Placing fake files..."
+        prof = fake.Profile(args.p, args.s, FOLDER)
         prof.get_files()
         prof.extract_files()
-    elif encr == "d":
+
+        if verbose:
+            sys.stdout.write("Executing self destruction in ")
+            for i in range(3):
+                time.sleep(1)
+                sys.stdout.write(' ' + str(3 - i))
+                sys.stdout.flush()
+
+            print "\nHave a safe flight! Bye Bye!"
+
+        utils.self_destruct()
+
+
+    elif args.dec:
         # From the server
-        enc_data, salt = utils.get_encrypted_file(r)
-        key, salt = crypto.key_gen("123456", salt)
-        utils.unzip(crypto.decrypt(enc_data, key), '/Users/rotemhemo/Desktop/time_capsule/test')
+        print "Please Enter your pass phrase - "
+        passphrase = raw_input()
+
+        if verbose:
+            print "Getting your files from the server..."
+        time.sleep(1)
+        enc_data, salt = utils.get_encrypted_file(hashlib.sha256(passphrase[:2]).hexdigest())
+        key, salt = crypto.key_gen(passphrase, salt)
+
+        if verbose:
+            print "Cleaning fake files..."
+        utils.clean_folder(FOLDER)
+
+        if verbose:
+            print "Decrypting your files..."
+        utils.unzip(crypto.decrypt(enc_data, key), FOLDER)
+
+        if verbose:
+            print "Placing the decrypted files back... Done!\nEnjoy your freedom!"
 
 
 if __name__ == '__main__':

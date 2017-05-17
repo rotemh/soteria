@@ -35,11 +35,13 @@ def key_gen(passphrase=None, _salt=None):
     :param praphrase: if not given, generate a completely random one.
     :return: private / public key pair
     """
-    if passphrase is not None:
+    if passphrase is None:
+        _passphrase = passphrase_generator(12)
+        seed, salt = key_derivation(_passphrase, _salt)
+        return RSA.generate(2048, randfunc=PRNG(seed)), _passphrase, salt
+    else:
         seed, salt = key_derivation(passphrase, _salt)
         return RSA.generate(2048, randfunc=PRNG(seed)), salt
-
-    return RSA.generate(2048)
 
 
 def encrypt(data, public_key):
@@ -57,7 +59,7 @@ def encrypt(data, public_key):
     cipher_rsa = PKCS1_OAEP.new(recipient_key)
     out += cipher_rsa.encrypt(session_key)
 
-    cipher_aes = AES.new(session_key, AES.MODE_EAX)
+    cipher_aes = AES.new(session_key, AES.MODE_GCM)
     cipher_text, tag = cipher_aes.encrypt_and_digest(data)
 
     out += cipher_aes.nonce
@@ -85,7 +87,7 @@ def decrypt(encrypted_data, private_key):
     cipher_rsa = PKCS1_OAEP.new(private_key)
     session_key = cipher_rsa.decrypt(bytes(enc_session_key))
 
-    cipher_aes = AES.new(session_key, AES.MODE_EAX, bytes(nonce))
+    cipher_aes = AES.new(session_key, AES.MODE_GCM, bytes(nonce))
     return cipher_aes.decrypt_and_verify(bytes(ciphertext), bytes(tag))
 
 
@@ -100,23 +102,34 @@ def key_derivation(passphrase, salt=None):
     return PBKDF2(passphrase, salt, dkLen=32, count=1000, prf=None), salt
 
 
+def passphrase_generator(len = 12):
+    """
+    Generates a random passphrase
+    :param len:
+    :return:
+    """
+    from xkcdpass import xkcd_password as xp
+    wordfile = xp.locate_wordfile()
+    mywords = xp.generate_wordlist(wordfile=wordfile, min_length=5, max_length=8)
+    return  xp.generate_xkcdpassword(mywords, numwords=len)
+
+
 if __name__ == "__main__":
     msg = b"Hello"
-    key, salt = key_gen(msg)
-
+    key, passphrase, salt = key_gen()
+    print "Your passphrase is - ", passphrase
     assert key_gen(msg, salt) == key_gen(msg, salt), "Keys are not supose to be differnet!"
     assert msg == decrypt(encrypt(msg, key), key), "Same text Encrytpion failed"
     assert msg != decrypt(encrypt(b"hello!", key), key), "diff text encrytpion failed"
 
-    key = key_gen()
+    key, salt = key_gen(passphrase=passphrase)
     assert msg == decrypt(encrypt(msg, key), key), "Same text Encrytpion failed"
     assert msg != decrypt(encrypt(b"hello!", key), key), "diff text encrytpion failed"
 
     # test with bytes
     random_bytes = bytes(urandom(10000))
-    key = key_gen()
+    key, passphrase, salt = key_gen()
     assert random_bytes == decrypt(encrypt(random_bytes, key), key), "Same text Encrytpion failed"
     assert random_bytes != decrypt(encrypt(bytes(urandom(10000)), key), key), "diff text encrytpion failed"
 
-    print
-    "All tests passed"
+    print "All tests passed"

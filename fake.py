@@ -1,4 +1,5 @@
 import utils
+import base64
 
 lawyer = "Lawyer"
 doctor = "Doctor"
@@ -7,29 +8,32 @@ male = "Male"
 
 
 class Profile(object):
-    def __init__(self, first, last, job, sex, out_folder):
-        self.first = first
-        self.last = last
+    def __init__(self, job, sex, out_folder):
         self.job = job
         self.sex = sex
         self.out_folder = out_folder
+
+        self.f1 = None
+        self.f2 = None
 
     def get_files(self):
         # get files from the server
         if self.job == lawyer:
             # request lawyer files
-            f1 = utils.get_request(utils.SERVER_ADDRESS + "profile/lawyer")
+            self.f1 = utils.get_request(utils.SERVER_ADDRESS + "profile/lawyer")
         else:
             # request doctor files
-            f1 = utils.get_request(utils.SERVER_ADDRESS + "profile/doctor")
+            self.f1 = utils.get_request(utils.SERVER_ADDRESS + "profile/doctor")
         if self.sex == female:
             # request vacation files
-            f2 = utils.get_request(utils.SERVER_ADDRESS + "profile/female")
+            self.f2 = utils.get_request(utils.SERVER_ADDRESS + "profile/female")
         else:
             # request puppy files
-            f2 = utils.get_request(utils.SERVER_ADDRESS + "profile/male")
-        self.f1 = bytearray(f1)
-        self.f2 = bytearray(f2)
+            self.f2 = utils.get_request(utils.SERVER_ADDRESS + "profile/male")
+
+        b64 = lambda x: base64.b64decode(x)
+        self.f1 = b64(self.f1)
+        self.f2 = b64(self.f2)
 
     def extract_files(self):
         utils.unzip(self.f1, self.out_folder)
@@ -37,9 +41,8 @@ class Profile(object):
 
 
 
-
 # example
-me = Profile("Maria", "Messick", "Lawyer", "Female", "/Users/mariamessick/Desktop/")
+me = Profile("Doctor", "Female", "~/Desktop/time_capsule")
 me.get_files()
 me.extract_files()
 

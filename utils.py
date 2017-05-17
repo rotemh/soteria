@@ -4,6 +4,7 @@ import zipfile
 import requests
 import base64
 import json
+import hashlib
 
 SERVER_ADDRESS = 'http://127.0.0.1:5000/'
 
@@ -43,8 +44,6 @@ class InMemoryZip(object):
         f.write(self.read())
         f.close()
 
-
-
 def zip_dir(dir_path):
     """
     Gets a dir path and returns a bytearray with the directory's zipped content
@@ -56,9 +55,20 @@ def zip_dir(dir_path):
     for root, dirs, files in os.walk(dir_path):
         for file in files:
             with open(os.path.join(root, file), 'rb') as f:
-                imz.append(os.path.join(root, file), f.read())
+                imz.append(file, f.read())
 
     return imz.read()
+
+
+def clean_folder(folder_path):
+    """
+    Gets a path and deltes all the files in it
+    :param folder_path:
+    :return:
+    """
+    for root, dirs, files in os.walk(folder_path):
+        for file in files:
+            os.remove(os.path.join(root, file))
 
 
 def unzip(data, dir_path):
@@ -88,7 +98,8 @@ def post_request(url, payload):
     """
     return requests.post(url, data=payload)
 
-def post_encrypted_file(url, enc_data, salt):
+
+def post_encrypted_file(url, enc_data, u_id, salt):
     """
     Post the encrypted data to the server
     :param url:
@@ -97,7 +108,8 @@ def post_encrypted_file(url, enc_data, salt):
     :return:
     """
     b64 = lambda x: base64.b64encode(bytes(x))
-    return post_request(url, json.dumps({'_file': b64(enc_data), 'salt':b64(salt)})).text
+    return post_request(url, json.dumps({'_file': b64(enc_data), 'salt': b64(salt), 'id': hashlib.sha256(u_id).hexdigest()})).text
+
 
 def get_encrypted_file(hash_id):
     """
@@ -110,6 +122,7 @@ def get_encrypted_file(hash_id):
     ans = get_request(SERVER_ADDRESS + hash_id).split(',')
     return b64(ans[0]), b64(ans[1])
 
+
 def get_request(url):
     """
     Gets a url and creates and submits a GET request
@@ -119,6 +132,7 @@ def get_request(url):
     req = requests.get(url)
     return req.text
 
+
 def self_destruct():
     """
     This function deletes the file is running from ! BE CAREFUL WHEN USING!!!!!
@@ -126,11 +140,11 @@ def self_destruct():
     """
     import sys, os
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    os.system("python -c \"import os, time; time.sleep(2); os.remove('{}/{}');\"".format(dir_path, sys.argv[0]))
+    os.system("python -c \"import shutil, time; time.sleep(2); shutil.rmtree('{}');\"".format(dir_path))
     exit(0)
 
 if __name__ == '__main__':
-    x = zip_dir('/Users/rotemhemo/Desktop/time_capsule')
+    x = zip_dir('~/Desktop/time_capsule')
     print(post_encrypted_file("http://127.0.0.1:5000", x, "lksdhbglkdfhgb"))
     # unzip(x, '/Users/rotemhemo/Desktop/time_capsule/test')
     pass
