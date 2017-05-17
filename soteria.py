@@ -9,6 +9,11 @@ import sys
 FOLDER = '/Users/rotemhemo/Desktop/demo'
 
 verbose = True
+def print_ascii():
+    with open("asciiart", "r") as f:
+        for line in f.readlines():
+            print line,
+    print " "
 
 def main():
 
@@ -21,7 +26,7 @@ def main():
 
 
     args = parser.parse_args()
-
+    print_ascii()
     if args.enc:
         if not args.p or not args.s:
             print "Please specify your profession and sex"
@@ -81,7 +86,7 @@ def main():
         utils.unzip(crypto.decrypt(enc_data, key), FOLDER)
 
         if verbose:
-            print "Placing the decrypted files back... Done!\n Enjoy your freedom!"
+            print "Placing the decrypted files back... Done!\nEnjoy your freedom!"
 
 
 if __name__ == '__main__':

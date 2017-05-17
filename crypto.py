@@ -59,7 +59,7 @@ def encrypt(data, public_key):
     cipher_rsa = PKCS1_OAEP.new(recipient_key)
     out += cipher_rsa.encrypt(session_key)
 
-    cipher_aes = AES.new(session_key, AES.MODE_EAX)
+    cipher_aes = AES.new(session_key, AES.MODE_GCM)
     cipher_text, tag = cipher_aes.encrypt_and_digest(data)
 
     out += cipher_aes.nonce
@@ -87,7 +87,7 @@ def decrypt(encrypted_data, private_key):
     cipher_rsa = PKCS1_OAEP.new(private_key)
     session_key = cipher_rsa.decrypt(bytes(enc_session_key))
 
-    cipher_aes = AES.new(session_key, AES.MODE_EAX, bytes(nonce))
+    cipher_aes = AES.new(session_key, AES.MODE_GCM, bytes(nonce))
     return cipher_aes.decrypt_and_verify(bytes(ciphertext), bytes(tag))
 
 
@@ -122,7 +122,7 @@ if __name__ == "__main__":
     assert msg == decrypt(encrypt(msg, key), key), "Same text Encrytpion failed"
     assert msg != decrypt(encrypt(b"hello!", key), key), "diff text encrytpion failed"
 
-    key, passphrase, salt = key_gen(passphrase=passphrase)
+    key, salt = key_gen(passphrase=passphrase)
     assert msg == decrypt(encrypt(msg, key), key), "Same text Encrytpion failed"
     assert msg != decrypt(encrypt(b"hello!", key), key), "diff text encrytpion failed"
 
