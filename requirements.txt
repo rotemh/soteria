@@ -29,7 +29,6 @@ psycopg2==2.6.1
 py2app==0.7.3
 PyAudio==0.2.8
 pycrypto==2.6.1
-PyMsgBox==1.0.3
 pyOpenSSL==0.13.1
 pyparsing==2.0.1
 PyScreeze==0.1.8
