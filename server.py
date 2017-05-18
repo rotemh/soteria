@@ -2,6 +2,7 @@ from flask import Flask
 from flask import request
 import json
 import base64
+import os
 app = Flask(__name__)
 
 stored_files = {}
@@ -44,4 +45,4 @@ def upload_file():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=33507)
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
